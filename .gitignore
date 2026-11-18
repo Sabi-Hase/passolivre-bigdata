@@ -1,0 +1,25 @@
+# Segredos / credenciais
+.env
+.env.*
+!.env.example
+*credentials*
+*secret*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Arquivos de execução
+chegada/
+logs/
+output/
+.pytest_cache/
+
+# IDE e sistema
+.vscode/
+.idea/
+.DS_Store
+
+# Configuracao local gerada pelo Apache Airflow
+config/airflow.cfg
