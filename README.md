@@ -2,6 +2,8 @@
 
 **Global Solution 2026.2 — FIAP**
 
+**[Acessar o MVP público — Painel de Acessibilidade](https://sabi-hase.github.io/passolivre-bigdata/)** · [Código-fonte no GitHub](https://github.com/Sabi-Hase/passolivre-bigdata)
+
 ## Integrantes
 
 | Nome completo | RM |
@@ -23,7 +25,7 @@ Demonstrar uma arquitetura de dados capaz de:
 - Aplicar deduplicação, regras de qualidade e tratamento de endereços.
 - Construir um **modelo dimensional Star Schema**, com uma tabela fato e duas dimensões.
 - Responder a perguntas analíticas sobre localização, tipo de barreira e bloqueio total.
-- Disponibilizar indicadores em um **dashboard analítico** no Databricks.
+- Disponibilizar indicadores em um **dashboard analítico** no Databricks e em uma **demonstração web pública** no GitHub Pages.
 
 O projeto demonstra o fluxo de engenharia e consumo analítico de dados; não implementa, nesta versão, uma aplicação completa de registro de denúncias ou uma API externa para o MVP.
 
@@ -40,10 +42,12 @@ flowchart TD
     F --> G["Ouro: tabelas de indicadores"]
     F --> H["Ouro: dimensões e fato"]
     G --> I["Dashboard Databricks AI/BI"]
+    G --> K["Recorte estático dos indicadores validados"]
+    K --> L["Painel público no GitHub Pages"]
     H --> J["Consultas analíticas e validações"]
 ```
 
-**Limite da automação:** o Airflow orquestra a coleta local. Nesta demonstração, o envio dos arquivos ao Databricks e a execução dos comandos SQL foram realizados **manualmente**. O dashboard é o MVP **analítico** implementado.
+**Limite da automação:** o Airflow orquestra a coleta local. Nesta demonstração, o envio dos arquivos ao Databricks e a execução dos comandos SQL foram realizados **manualmente**. O painel do Databricks é o MVP analítico original; a versão publicada no GitHub Pages é uma **demonstração estática e interativa** dos resultados validados, sem atualização em tempo real.
 
 ## 3. Tecnologias utilizadas
 
@@ -58,6 +62,8 @@ flowchart TD
 | Unity Catalog Volumes | Recebimento dos arquivos CSV e JSON no Databricks |
 | Delta Lake | Armazenamento das tabelas Bronze, Prata e Ouro |
 | Databricks AI/BI Dashboards | Visualização dos indicadores |
+| HTML, CSS e JavaScript | Painel público com filtros executados no navegador |
+| GitHub Pages | Hospedagem pública da demonstração interativa |
 | Mermaid / Markdown | Diagramas e documentação técnica |
 
 ## 4. Organização do repositório
@@ -70,7 +76,7 @@ flowchart TD
 | `chegada/viacep/` | Arquivos JSON produzidos localmente |
 | `databricks/` | Scripts SQL das camadas e das consultas |
 | `scripts/` | Scripts de validação e utilitários |
-| `docs/` | Modelagem, resultados, privacidade e integração |
+| `docs/` | Modelagem, resultados, privacidade, integração e site público (`docs/index.html`) |
 | `evidencias/` | Capturas de tela da implementação e dos resultados |
 | `config/` e `plugins/` | Configuração e extensões locais do Airflow |
 | `logs/` | Logs gerados pela execução local |
@@ -100,6 +106,7 @@ A numeração dos arquivos identifica sua finalidade. O script `06_validacao_int
 - [`docs/lgpd.md`](docs/lgpd.md) — privacidade, riscos e medidas previstas para uma operação com dados reais.
 - [`docs/integracao_mvp.md`](docs/integracao_mvp.md) — fluxo de dados até o dashboard e limites da integração.
 - [`docs/contrato_inicial.md`](docs/contrato_inicial.md) — documentação inicial do projeto.
+- [`docs/index.html`](docs/index.html) — código-fonte do painel web público.
 
 ## 5. Orquestração com Apache Airflow
 
@@ -207,6 +214,8 @@ SQL: [`databricks/05_consultas_analiticas.sql`](databricks/05_consultas_analitic
 
 ## 9. Dashboard e integração com o MVP
 
+### 9.1. Dashboard analítico no Databricks
+
 Foi publicado no Databricks AI/BI o dashboard **PassoLivre | Painel de Acessibilidade**, com nove visualizações:
 
 - Total de ocorrências.
@@ -219,7 +228,17 @@ Foi publicado no Databricks AI/BI o dashboard **PassoLivre | Painel de Acessibil
 - Percentual de ocorrências aptas.
 - Percentual de aptas com endereço.
 
-O dashboard utiliza três datasets SQL baseados nas tabelas de indicadores da Ouro. Ele representa o **MVP analítico** da solução, demonstrando o consumo de informações processadas pelo pipeline.
+O dashboard utiliza três datasets SQL baseados nas tabelas de indicadores da Ouro. Ele demonstra o consumo analítico dos dados processados pelo pipeline. Seu acesso depende das permissões da conta Databricks.
+
+### 9.2. MVP web público no GitHub Pages
+
+Para permitir a avaliação sem acesso à conta Databricks, foi publicada uma versão web independente, em [`docs/index.html`](docs/index.html):
+
+**[Abrir o Painel de Acessibilidade — MVP público](https://sabi-hase.github.io/passolivre-bigdata/)**
+
+A página exibe indicadores gerais, gráficos por bairro e tipo de barreira e **filtros interativos**. Os valores correspondem ao recorte agregado da amostra fictícia já validada nas consultas SQL. Os filtros são processados localmente pelo JavaScript no navegador.
+
+**Importante:** essa versão usa dados estáticos incluídos no HTML; **não consulta o Databricks nem executa o pipeline em tempo real**. Alterações futuras nas tabelas Delta não são refletidas automaticamente no site.
 
 **Escopo:** não foi implementada uma API própria para uma aplicação externa. A carga para o Databricks e as transformações SQL não são totalmente automatizadas na versão apresentada.
 
@@ -242,7 +261,34 @@ Na raiz do repositório:
 python scripts/01_verificar_dados.py
 ```
 
-### 10.3. Inicializar o Airflow
+### 10.3. Geração reproduzível da amostra fictícia
+
+O projeto disponibiliza um gerador determinístico que reproduz
+exatamente a amostra fictícia utilizada no pipeline.
+
+Para executá-lo:
+
+```powershell
+python scripts/02_gerar_amostra_ficticia.py
+```
+
+O arquivo gerado será salvo em:
+
+`output/ocorrencias_rpa_gerada.csv`
+
+O gerador reproduz 15 registros, com 14 identificadores
+distintos e uma duplicidade intencional, utilizada para
+demonstrar as regras de deduplicação da camada Prata.
+
+O script valida a correspondência byte a byte com
+`amostras/ocorrencias_rpa.csv`.
+
+A execução não modifica a amostra original, a DAG do
+Airflow ou as tabelas existentes no Databricks.
+
+A pasta `output/` é ignorada pelo Git.
+
+### 10.4. Inicializar o Airflow
 
 Com o Docker Desktop ativo e as configurações locais preparadas:
 
@@ -254,7 +300,7 @@ docker compose ps
 
 A interface do Airflow fica disponível, no ambiente configurado, em `http://localhost:8080`. Localize a DAG `passolivre_coleta` e execute-a ou inspecione suas execuções.
 
-### 10.4. Carregar os dados no Databricks
+### 10.5. Carregar os dados no Databricks
 
 1. Configure o ambiente Databricks e a estrutura `workspace.gs` utilizada nos scripts.
 2. Disponibilize os CSVs e JSONs gerados nos diretórios correspondentes do Unity Catalog Volume `/Volumes/workspace/gs/chegada/`.
@@ -268,6 +314,10 @@ A interface do Airflow fica disponível, no ambiente configurado, em `http://loc
 
 O dashboard foi configurado e publicado no Databricks durante a demonstração. Não há, neste repositório, promessa de provisionamento automático do dashboard em outro workspace.
 
+### 10.6. Acessar a versão web pública
+
+O painel pode ser aberto sem autenticação no GitHub Pages: **https://sabi-hase.github.io/passolivre-bigdata/**. Para inspecionar ou testar localmente a interface, abra `docs/index.html` no navegador. Essa página não depende de conexão ao Databricks.
+
 ## 11. Evidências de implementação
 
 As capturas de tela ficam em `evidencias/` e registram:
@@ -278,10 +328,14 @@ As capturas de tela ficam em `evidencias/` e registram:
 - Construção das tabelas Ouro e publicação do dashboard.
 - Criação e validação das dimensões e da fato.
 - Resultados das cinco consultas analíticas, incluindo o indicador de cobertura/impacto potencial.
+- Validação de idempotência da Bronze: reexecução dos dois `COPY INTO` com **zero novas linhas inseridas** e contagens preservadas (60 ocorrências e 24 respostas ViaCEP).
+- Listagem atual do Volume: quatro CSVs e quatro JSONs, além da pasta `_controle` vazia.
+- Visualização Grid da DAG no Airflow 3 e demonstração pública do MVP web.
+- Execução do gerador determinístico e comparação byte a byte com a amostra original.
 
 As evidências das consultas foram organizadas com nomes como `consulta_01_bairros.png`, `consulta_02_tipos.png`, `consulta_03_bairros_tipos.png`, `consulta_04_percentual_bloqueios.png` e `consulta_05_indicador_impacto.png` (a última pode utilizar mais de uma imagem para mostrar todas as colunas).
 
-As imagens documentam a execução realizada, mas não substituem os scripts SQL e as descrições técnicas disponíveis no repositório.
+As imagens documentam a execução realizada, mas não substituem os scripts SQL e as descrições técnicas disponíveis no repositório. As capturas complementares de idempotência, Volume, Grid, MVP público e gerador devem ser incluídas em `evidencias/` e versionadas no Git para acompanhar a entrega final.
 
 ## 12. Privacidade e LGPD
 
@@ -298,12 +352,15 @@ A implementação é uma **prova de conceito acadêmica**, com amostra pequena e
 - Automatizar o envio dos arquivos ao Databricks e as transformações SQL.
 - Adicionar monitoramento, alertas e políticas operacionais de qualidade.
 - Desenvolver uma API e uma interface completa para registro e acompanhamento de ocorrências.
+- Automatizar a publicação ou atualização dos dados agregados na versão web pública.
 - Incorporar autenticação, controles de acesso e procedimentos de privacidade aplicáveis a dados reais.
 - Ampliar a amostra e criar indicadores históricos e espaciais mais detalhados.
 - Avaliar os resultados com dados reais de origem e qualidade verificadas, antes de utilizá-los em decisões públicas.
 
 ## 14. Recursos relacionados
 
+- [MVP público — GitHub Pages](https://sabi-hase.github.io/passolivre-bigdata/)
+- [Repositório PassoLivre Big Data](https://github.com/Sabi-Hase/passolivre-bigdata)
 - [PassoLivre RPA](https://github.com/letyresina/passolivre-rpa)
 - [PassoLivre Applied](https://github.com/letyresina/passolivre-applied)
 - [Modelo dimensional](docs/modelo_dimensional.md)
