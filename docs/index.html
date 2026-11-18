@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PassoLivre: painel público demonstrativo de indicadores de acessibilidade urbana com dados fictícios.">
+  <meta name="theme-color" content="#081425">
+  <title>PassoLivre | Painel de Acessibilidade</title>
+  <style>
+    :root { color-scheme: dark; --bg:#081425; --surface:#101f34; --surface2:#172b46; --border:#28405b; --text:#eef5ff; --muted:#a4b9d1; --blue:#57b8fb; --teal:#51e0ca; --orange:#ffbf78; --shadow:0 16px 42px rgba(0,0,0,.17); }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(ellipse at 80% -18%,#153e5d 0%,transparent 50%),var(--bg);color:var(--text)}
+    a{color:#8bd6ff} a:hover{text-decoration:none} a:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--orange);outline-offset:4px}
+    .wrap{width:min(1200px,calc(100% - 40px));margin:auto} header{border-bottom:1px solid var(--border);background:rgba(7,18,32,.7)}.head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:19px 0;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.12rem;letter-spacing:.1px}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#062137;font-weight:900}.status{border:1px solid var(--border);border-radius:100px;padding:7px 12px;color:var(--muted);font-size:.82rem}
+    .hero{padding:54px 0 30px}.eyebrow{text-transform:uppercase;color:var(--teal);font-size:.74rem;letter-spacing:.16em;font-weight:800;margin:0 0 13px}.hero h1{font-size:clamp(2rem,4vw,3.2rem);line-height:1.09;max-width:750px;letter-spacing:-.04em;margin:0}.hero p{color:var(--muted);max-width:820px;line-height:1.65;font-size:1rem;margin:18px 0 0}.disclaimer{margin:21px 0 0;border-left:3px solid var(--orange);padding:12px 16px;background:rgba(255,191,120,.07);border-radius:0 9px 9px 0;color:#f4d4ad;font-size:.88rem}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;flex-wrap:wrap;margin:30px 0 17px}.section-head h2{font-size:1.22rem;letter-spacing:-.02em;margin:0}.section-head p{margin:5px 0 0;color:var(--muted);font-size:.86rem;line-height:1.5}
+    .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{background:linear-gradient(155deg,rgba(24,44,70,.95),rgba(15,29,49,.95));border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--shadow)}.card .caption{color:var(--muted);font-size:.85rem;line-height:1.5}.value{font-size:clamp(2.1rem,3vw,2.85rem);font-weight:800;letter-spacing:-.045em;margin:9px 0 0;font-variant-numeric:tabular-nums}.sub{font-size:.76rem;color:var(--muted);margin-top:9px}.value.teal{color:var(--teal)}.value.blue{color:var(--blue)}.value.orange{color:var(--orange)}
+    .toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:0 0 18px}.toolbar label{font-size:.84rem;color:var(--muted)}.toolbar select{border:1px solid #4b6888;background:#132943;color:var(--text);font:inherit;padding:9px 12px;border-radius:10px;min-width:210px}.toolbar button{border:1px solid #46627e;background:#1a3654;color:var(--text);font:inherit;padding:10px 12px;border-radius:10px;cursor:pointer}.toolbar button:hover{background:#25496c}
+    .charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.chart{min-height:286px}.chart h3{font-size:1rem;margin:0 0 4px}.chart p{font-size:.82rem;color:var(--muted);margin:0 0 24px;line-height:1.5}.barrow{display:grid;grid-template-columns:minmax(100px,160px) minmax(50px,1fr) 54px;align-items:center;gap:12px;margin:18px 0}.barlabel{font-size:.83rem;overflow-wrap:anywhere}.bartrack{height:12px;background:#263a52;border-radius:20px;overflow:hidden}.barfill{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:20px;min-width:0}.barfill.warn{background:linear-gradient(90deg,#faaf67,#ffd38b)}.barcount{font-size:.86rem;text-align:right;font-variant-numeric:tabular-nums;color:var(--text)}.tablecard{grid-column:1/-1}.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;text-align:left;font-size:.88rem}th{color:var(--muted);font-weight:600}th,td{border-bottom:1px solid #2a4058;padding:12px 10px}td:nth-last-child(-n+2),th:nth-last-child(-n+2){text-align:right}tr:last-child td{border-bottom:0}.empty{color:var(--muted);padding:30px 0}
+    .foot{color:var(--muted);font-size:.83rem;line-height:1.6;padding:28px 0 56px;border-top:1px solid var(--border);margin-top:36px}.footlinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:12px}
+    @media(max-width:850px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.charts{grid-template-columns:1fr}.tablecard{grid-column:auto}}@media(max-width:560px){.wrap{width:min(100% - 28px,1200px)}.metrics{grid-template-columns:1fr 1fr;gap:10px}.card{padding:16px}.chart{padding:19px}.barrow{grid-template-columns:110px minmax(30px,1fr) 35px;gap:7px}.value{font-size:2rem}.hero{padding:37px 0 18px}}
+  </style>
+</head>
+<body>
+<header><div class="wrap head"><div class="brand"><span class="mark" aria-hidden="true">P</span>PassoLivre <span style="font-weight:400;color:var(--muted)">| Painel de Acessibilidade</span></div><span class="status">Global Solution 2026.2 · FIAP</span></div></header>
+<main class="wrap">
+<section class="hero" aria-labelledby="page-title"><p class="eyebrow">Acessibilidade urbana · CitizenTech</p><h1 id="page-title">Dados para entender barreiras e apoiar decisões.</h1><p>Uma demonstração pública dos indicadores produzidos pelo pipeline PassoLivre, construído com Airflow, Databricks e Delta Lake. Analise a distribuição dos problemas por bairro e por tipo de barreira.</p><div class="disclaimer" role="note"><strong>Dados fictícios:</strong> as ocorrências são exemplos acadêmicos. Os resultados não representam a situação real dos bairros de São Paulo. Este painel é um recorte estático dos indicadores validados, não uma conexão ao Databricks em tempo real.</div></section>
+<section aria-labelledby="indicators"><div class="section-head"><div><h2 id="indicators">Indicadores gerais do pipeline</h2><p>Base completa: 14 ocorrências únicas, incluindo registros pendentes de qualidade.</p></div></div><div class="metrics">
+ <article class="card"><div class="caption">Ocorrências únicas</div><div class="value">14</div><div class="sub">Após deduplicação</div></article>
+ <article class="card"><div class="caption">Ocorrências aptas</div><div class="value blue">11</div><div class="sub">3 pendentes de qualidade</div></article>
+ <article class="card"><div class="caption">Aptas com endereço</div><div class="value teal">10</div><div class="sub">Registros com endereço ViaCEP válido</div></article>
+ <article class="card"><div class="caption">Bloqueios totais mapeados</div><div class="value orange">3</div><div class="sub">Entre 10 ocorrências aptas com endereço</div></article>
+ <article class="card"><div class="caption">Percentual de ocorrências aptas</div><div class="value">78,57%</div><div class="sub">11 / 14 registros</div></article>
+ <article class="card"><div class="caption">Percentual de aptas com endereço</div><div class="value">71,43%</div><div class="sub">10 / 14 registros</div></article>
+</div></section>
+<section aria-labelledby="analysis"><div class="section-head"><div><h2 id="analysis">Distribuição das barreiras</h2><p>Explore as 10 ocorrências aptas com endereço, preservando os indicadores globais acima.</p></div></div><div class="toolbar"><label for="bairro">Bairro</label><select id="bairro"><option value="">Todos os bairros</option><option>Bela Vista</option><option>Paraíso</option><option>Pinheiros</option><option>Sé</option></select><label for="tipo">Tipo de barreira</label><select id="tipo"><option value="">Todos os tipos</option><option value="buraco">Buraco</option><option value="desnivel">Desnível</option><option value="obstaculo">Obstáculo</option><option value="piso_tatil_danificado">Piso tátil danificado</option></select><button id="clear" type="button">Limpar filtros</button></div>
+<div class="charts">
+ <article class="card chart"><h3>Ocorrências por bairro</h3><p>Quantidade de ocorrências no recorte selecionado.</p><div id="by-bairro"></div></article>
+ <article class="card chart"><h3>Ocorrências por tipo</h3><p>Distribuição dos tipos de barreira no recorte selecionado.</p><div id="by-tipo"></div></article>
+ <article class="card chart"><h3>Bloqueios totais por tipo</h3><p>Ocorrências com impedimento total de passagem.</p><div id="by-block"></div></article>
+ <article class="card chart"><h3>Resumo do filtro</h3><p>Somente as ocorrências aptas e com endereço entram nesta análise.</p><div id="filter-summary" aria-live="polite"></div></article>
+ <article class="card tablecard"><h3 style="margin-top:0">Distribuição por bairro e tipo</h3><p style="color:var(--muted);font-size:.82rem">Linhas agregadas; não representam ocorrências individuais.</p><div class="tablewrap"><table><thead><tr><th>Bairro</th><th>Tipo de barreira</th><th>Ocorrências</th><th>Bloqueios totais</th></tr></thead><tbody id="details"></tbody></table></div></article>
+</div></section>
+</main>
+<footer class="wrap foot"><div class="footlinks"><a href="https://github.com/Sabi-Hase/passolivre-bigdata" target="_blank" rel="noopener noreferrer">Código e evidências no GitHub</a><a href="https://github.com/Sabi-Hase/passolivre-bigdata/blob/main/docs/modelo_dimensional.md" target="_blank" rel="noopener noreferrer">Modelo dimensional</a><a href="https://github.com/Sabi-Hase/passolivre-bigdata/blob/main/docs/lgpd.md" target="_blank" rel="noopener noreferrer">Privacidade e LGPD</a></div><div>Projeto acadêmico FIAP · PassoLivre · Amostra fictícia. Os dados exibidos foram transcritos dos resultados validados no Databricks, sem acesso a dados ou credenciais privados.</div></footer>
+<script>
+'use strict';
+// Distribuição agregada validada nas cinco consultas SQL do projeto.
+// Cada linha descreve bairro, tipo, ocorrências e bloqueios totais.
+const registros = [
+ {bairro:'Bela Vista',tipo:'obstaculo',total:2,bloqueios:2},
+ {bairro:'Bela Vista',tipo:'desnivel',total:1,bloqueios:0},
+ {bairro:'Bela Vista',tipo:'piso_tatil_danificado',total:1,bloqueios:0},
+ {bairro:'Paraíso',tipo:'buraco',total:1,bloqueios:0},
+ {bairro:'Paraíso',tipo:'piso_tatil_danificado',total:1,bloqueios:0},
+ {bairro:'Pinheiros',tipo:'desnivel',total:1,bloqueios:1},
+ {bairro:'Pinheiros',tipo:'buraco',total:1,bloqueios:0},
+ {bairro:'Sé',tipo:'buraco',total:1,bloqueios:0},
+ {bairro:'Sé',tipo:'desnivel',total:1,bloqueios:0}
+];
+const nomes = {buraco:'Buraco',desnivel:'Desnível',obstaculo:'Obstáculo',piso_tatil_danificado:'Piso tátil danificado'};
+const bairro = document.getElementById('bairro');
+const tipo = document.getElementById('tipo');
+const sum = (rows,key)=>rows.reduce((total,r)=>total+r[key],0);
+function drawBars(id, keys, field, opts={}) {
+ const box=document.getElementById(id);
+ const totals=new Map(keys.map(key=>[key,0]));
+ for(const r of opts.rows)totals.set(r[field==='bairro'?'bairro':'tipo'],(totals.get(r[field==='bairro'?'bairro':'tipo'])||0)+r[opts.metric||'total']);
+ const max=Math.max(1,...totals.values());
+ box.replaceChildren();
+ for(const [key,n] of totals){
+  const row=document.createElement('div');row.className='barrow';
+  const label=document.createElement('span');label.className='barlabel';label.textContent=nomes[key]||key;
+  const track=document.createElement('div');track.className='bartrack';track.setAttribute('role','img');track.setAttribute('aria-label',`${nomes[key]||key}: ${n}`);
+  const fill=document.createElement('span');fill.className='barfill'+(opts.warn?' warn':'');fill.style.width=`${100*n/max}%`;
+  const count=document.createElement('span');count.className='barcount';count.textContent=String(n);
+  track.appendChild(fill);row.append(label,track,count);box.appendChild(row);
+ }
+}
+function render(){
+ const rows=registros.filter(r=>(!bairro.value||r.bairro===bairro.value)&&(!tipo.value||r.tipo===tipo.value));
+ const bairros=[...new Set(registros.map(r=>r.bairro))];
+ const tipos=[...new Set(registros.map(r=>r.tipo))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ drawBars('by-bairro',bairros,'bairro',{rows,metric:'total'});
+ drawBars('by-tipo',tipos,'tipo',{rows,metric:'total'});
+ drawBars('by-block',tipos,'tipo',{rows,metric:'bloqueios',warn:true});
+ const total=sum(rows,'total'),bloqueios=sum(rows,'bloqueios');
+ const box=document.getElementById('filter-summary');box.replaceChildren();
+ const v=document.createElement('div');v.className='value teal';v.textContent=String(total);
+ const p=document.createElement('p');p.style.color='var(--muted)';p.textContent=`ocorrências no recorte · ${bloqueios} bloqueio(s) total(is) · ${total?(bloqueios/total*100).toFixed(2).replace('.',','):'0,00'}% com bloqueio total`;
+ box.append(v,p);
+ const tbody=document.getElementById('details');tbody.replaceChildren();
+ if(!rows.length){const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=4;td.className='empty';td.textContent='Nenhuma ocorrência para os filtros selecionados.';tr.appendChild(td);tbody.appendChild(tr);return}
+ for(const r of rows){const tr=document.createElement('tr');for(const value of [r.bairro,nomes[r.tipo],r.total,r.bloqueios]){const td=document.createElement('td');td.textContent=String(value);tr.appendChild(td)}tbody.appendChild(tr)}
+}
+bairro.addEventListener('change',render);tipo.addEventListener('change',render);
+document.getElementById('clear').addEventListener('click',()=>{bairro.value='';tipo.value='';render()});
+render();
+</script>
+</body></html>

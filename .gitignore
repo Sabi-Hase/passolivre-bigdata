@@ -23,3 +23,6 @@ output/
 
 # Configuracao local gerada pelo Apache Airflow
 config/airflow.cfg
+
+# Arquivo local de evidencias para entrega
+evidencias_passolivre.zip
